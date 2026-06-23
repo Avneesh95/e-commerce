@@ -5,6 +5,8 @@ const app = express();
 const connectDB = require("./src/config/db.js");
 const authRoutes = require('./src/routes/authRoutes');
 
+const productRoutes = require("./src/routes/productRoutes");
+
 
 dotenv.config();
 const port = 4000;
@@ -19,6 +21,9 @@ app.get('/',(req,res)=>{
 app.use('/api/auth',authRoutes);
 app.use('/api/login',authRoutes);
 app.use('/api/profile',authRoutes);
+
+
+app.use("/api/products", productRoutes);
 
 
 connectDB();

@@ -11,3 +11,7 @@ const profile = async (req, res) => {
         user,
     });
 }
+
+module.exports = profile;
+
+
