@@ -100,9 +100,45 @@ const updateProduct = async (req, res) => {
   }
 };
 
+
+//delete Product
+
+const deleteProduct = async(req , res)=>{
+
+  const {id} = req.params
+  const delProduct = await productModel.findById(id);
+
+  if(!delProduct)
+  {
+    return res.status(400).json({
+      message : "product not exist"
+    })
+  }
+
+ try {
+
+   const deleteProducts = await productModel.findByIdAndDelete(id);
+  
+    res.status(200).json({
+      success: true,
+      message: "Product deleted successfully",
+    });
+  
+ } catch (error) {
+  res.status(400).json({
+    success : false,
+    error
+  })
+ }
+
+}
+
+
+
 module.exports = {
   createProduct,
   products,
   getProductById,
   updateProduct,
+  deleteProduct
 };
