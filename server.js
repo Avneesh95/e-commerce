@@ -18,9 +18,7 @@ app.get('/',(req,res)=>{
     res.send("hello world");
 })
 
-app.use('/api/auth',authRoutes);
-app.use('/api/login',authRoutes);
-app.use('/api/profile',authRoutes);
+app.use('/api/auth', authRoutes);
 
 
 app.use("/api/products", productRoutes);
