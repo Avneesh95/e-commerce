@@ -7,6 +7,7 @@ const authRoutes = require('./src/routes/authRoutes');
 
 const productRoutes = require("./src/routes/productRoutes");
 
+const cartRoutes = require('./src/routes/cartRoutes')
 
 dotenv.config();
 const port = 4000;
@@ -22,6 +23,9 @@ app.use('/api/auth', authRoutes);
 
 
 app.use("/api/products", productRoutes);
+
+
+app.use("/api/cart", cartRoutes);
 
 
 connectDB();
