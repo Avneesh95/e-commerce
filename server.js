@@ -1,23 +1,22 @@
 const express = require("express");
 const dotenv = require("dotenv");
+dotenv.config();
 const cors = require("cors");
 const app = express();
 const connectDB = require("./src/config/db.js");
 const authRoutes = require("./src/routes/authRoutes");
 const orderRoutes = require("./src/routes/orderRoutes.js");
 const productRoutes = require("./src/routes/productRoutes");
+const paymentRoutes = require("./src/routes/paymentRoutes.js");
+const adminRoutes = require("./src/routes/adminRoutes");
 
+const invoiceRoutes = require("./src/routes/invoiceRoutes");
 const cartRoutes = require("./src/routes/cartRoutes");
 
-dotenv.config();
 const port = 4000;
 
 app.use(cors());
 app.use(express.json());
-
-app.get("/", (req, res) => {
-  res.send("hello world");
-});
 
 app.use("/api/auth", authRoutes);
 
@@ -26,6 +25,13 @@ app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 
 app.use("/api/order", orderRoutes);
+
+app.use("/api/payment", paymentRoutes);
+
+app.use("/api/admin", adminRoutes);
+
+app.use("/api/invoice", invoiceRoutes);
+
 
 connectDB();
 

@@ -23,7 +23,7 @@ router.get("/my", isAuthenticated, getMyOrders);
 router.get("/:id", isAuthenticated, getOrderById);
 
 
-router.get("/", isAuthenticated, isAdmin, getAllOrders);
+router.get("/", isAuthenticated, getAllOrders);
 
 router.put("/:id", isAuthenticated, isAdmin, updateOrderStatus);
 
