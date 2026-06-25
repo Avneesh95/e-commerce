@@ -1,12 +1,14 @@
 const jwt = require("jsonwebtoken");
 const User = require("../model/UserModel");
 
+// Basic JWT verification middleware
 const authMiddleware = (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).json({
+        success: false,
         message: "No token provided",
       });
     }
@@ -18,13 +20,23 @@ const authMiddleware = (req, res, next) => {
     req.user = decoded;
 
     next();
-  } catch (err) {
+  } catch (error) {
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({
+        success: false,
+        message: "Token expired. Please login again.",
+      });
+    }
+
     return res.status(401).json({
+      success: false,
       message: "Invalid token",
     });
   }
 };
 
+
+// Full authentication middleware
 const isAuthenticated = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
@@ -37,18 +49,30 @@ const isAuthenticated = async (req, res, next) => {
     }
 
     const token = authHeader.split(" ")[1];
-``
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-  
+    const user = await User.findById(decoded.id);
 
-    req.user = await User.findById(decoded.id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
 
-    console.log("User Found:", req.user);
+    req.user = user;
 
     next();
   } catch (error) {
     console.log(error);
+
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({
+        success: false,
+        message: "Token expired. Please login again.",
+      });
+    }
 
     return res.status(401).json({
       success: false,
@@ -57,6 +81,7 @@ const isAuthenticated = async (req, res, next) => {
   }
 };
 
+// Admin middleware
 const isAdmin = (req, res, next) => {
   if (!req.user) {
     return res.status(401).json({
@@ -75,10 +100,8 @@ const isAdmin = (req, res, next) => {
   next();
 };
 
-
-
 module.exports = {
-  isAdmin,
   authMiddleware,
   isAuthenticated,
+  isAdmin,
 };

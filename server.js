@@ -33,6 +33,10 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/invoice", invoiceRoutes);
 
 
+app.get("/",(req,res)=>{
+  res.send("working");
+})
+
 connectDB();
 
 app.listen(port, () => {

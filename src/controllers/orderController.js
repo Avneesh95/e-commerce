@@ -3,9 +3,34 @@ const Cart = require("../model/CartModel");
 
 const placeOrder = async (req, res) => {
   try {
-    const cart = await Cart.findOne({ user: req.user._id }).populate(
-      "items.product"
-    );
+    const {
+      fullName,
+      phone,
+      address,
+      city,
+      state,
+      pincode,
+      country,
+    } = req.body;
+
+   
+    if (
+      !fullName ||
+      !phone ||
+      !address ||
+      !city ||
+      !state ||
+      !pincode
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide shipping details",
+      });
+    }
+
+    const cart = await Cart.findOne({
+      user: req.user._id,
+    }).populate("items.product");
 
     if (!cart || cart.items.length === 0) {
       return res.status(400).json({
@@ -28,11 +53,25 @@ const placeOrder = async (req, res) => {
 
     const order = await Order.create({
       user: req.user._id,
+
       orderItems,
+
+      shippingAddress: {
+        fullName,
+        phone,
+        address,
+        city,
+        state,
+        pincode,
+        country: country || "India",
+      },
+
       totalAmount,
+
+      paymentStatus: "unpaid",
+      status: "pending",
     });
 
-   
     cart.items = [];
     await cart.save();
 
@@ -48,7 +87,6 @@ const placeOrder = async (req, res) => {
     });
   }
 };
-
 
 const getMyOrders = async (req, res) => {
   try {

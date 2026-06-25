@@ -1,6 +1,6 @@
 const productModel = require("../model/productModel");
 
-// Create Product
+
 const createProduct = async (req, res) => {
   try {
     const { name, description, price, image, category, stock } = req.body;
@@ -26,7 +26,7 @@ const createProduct = async (req, res) => {
   }
 };
 
-// Get All Products
+
 const products = async (req, res) => {
   try {
     const product = await productModel.find();
@@ -44,7 +44,7 @@ const products = async (req, res) => {
   }
 };
 
-// Get Product By ID
+
 const getProductById = async (req, res) => {
   try {
     const { id } = req.params;
